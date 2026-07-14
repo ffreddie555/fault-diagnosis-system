@@ -21,23 +21,37 @@ voltage_cols = [
     'Bus_1_Line_01_02A_vol_L3_V'
 ]
 
+# ========== 电压波形图 ==========
 plt.figure(figsize=(15, 6))
 
 for col in voltage_cols:
     plt.plot(df['time_s'], df[col], label=col, linewidth=1)
 
-plt.title(f'输电线路三相电压波形 - 样本 {pkl_file_name}')
-plt.xlabel('时间 (秒)')
-plt.ylabel('电压 (V)')
+plt.title('Three-Phase Voltage Waveform During Fault Event', fontsize=14, fontweight='bold')
+plt.xlabel('Time (s)', fontsize=12)
+plt.ylabel('Voltage (V)', fontsize=12)
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
 
 plt.savefig('voltage_waveform.png', dpi=300, bbox_inches='tight')
-print("\n✅ 电压波形图已保存为: voltage_waveform.png")
-
 plt.show()
 
+# ========== 电流波形图 ==========
+plt.figure(figsize=(15, 6))
+
+for col in current_cols:
+    plt.plot(df['time_s'], df[col], label=col, linewidth=1)
+
+plt.title('Three-Phase Current Waveform During Fault Event', fontsize=14, fontweight='bold')
+plt.xlabel('Time (s)', fontsize=12)
+plt.ylabel('Current (A)', fontsize=12)
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+
+plt.savefig('current_waveform.png', dpi=300, bbox_inches='tight')
+plt.show()
 current_cols = [
     'Bus_1_Line_01_02A_cur_L1_A',
     'Bus_1_Line_01_02A_cur_L2_A',
