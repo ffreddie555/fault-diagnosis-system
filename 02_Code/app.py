@@ -69,7 +69,6 @@ text = {
         'fault_confirmation': '故障类型确认',
         'confidence_assessment': '置信度评估',
         'debug_info': '🔍 调试：置信度原始值 = {:.4f}，百分比 = {:.1f}%',
-        # 运行状态
         'status_critical': '🚨 严重故障',
         'status_critical_desc': '检测到严重故障，需要立即处理，建议紧急停机检修。',
         'status_fault': '🔴 故障状态',
@@ -116,7 +115,6 @@ text = {
         'fault_confirmation': 'Fault Type Confirmation',
         'confidence_assessment': 'Confidence Assessment',
         'debug_info': '🔍 Debug: Raw confidence = {:.4f}, Percentage = {:.1f}%',
-        # 运行状态
         'status_critical': '🚨 Critical Fault',
         'status_critical_desc': 'Critical fault detected. Immediate action required. Recommend emergency shutdown and repair.',
         'status_fault': '🔴 Fault Detected',
@@ -342,6 +340,30 @@ Requirements: Professional, concise, directly usable."""
         return "报告生成失败: " + str(e)
 
 
+# ========== 获取运行状态 ==========
+def get_status_info(confidence, lang='中文'):
+    if confidence >= 0.8:
+        if lang == '中文':
+            return '🚨 严重故障', '检测到严重故障，需要立即处理，建议紧急停机检修。'
+        else:
+            return '🚨 Critical Fault', 'Critical fault detected. Immediate action required. Recommend emergency shutdown and repair.'
+    elif confidence >= 0.6:
+        if lang == '中文':
+            return '🔴 故障状态', '已检测到明确故障，建议安排检修，避免故障扩大。'
+        else:
+            return '🔴 Fault Detected', 'Fault detected. Recommend scheduling maintenance to prevent escalation.'
+    elif confidence >= 0.4:
+        if lang == '中文':
+            return '⚠️ 预警状态', '检测到轻微异常，建议加强监测，关注参数变化趋势。'
+        else:
+            return '⚠️ Warning', 'Minor anomalies detected. Recommend enhanced monitoring and trend analysis.'
+    else:
+        if lang == '中文':
+            return '✅ 正常运行', '系统运行平稳，电压/电流参数正常，未检测到故障迹象。'
+        else:
+            return '✅ Normal Operation', 'System is operating normally. All voltage/current parameters are within normal ranges.'
+
+
 # ========== 解析 LLM 报告 ==========
 def parse_report(report_text):
     lines = report_text.split('\n')
@@ -388,30 +410,6 @@ def parse_report(report_text):
                 sections['advice'].append(line)
     
     return sections
-
-
-# ========== 获取运行状态 ==========
-def get_status_info(confidence, lang='中文'):
-    if confidence >= 0.8:
-        if lang == '中文':
-            return '🚨 严重故障', '检测到严重故障，需要立即处理，建议紧急停机检修。'
-        else:
-            return '🚨 Critical Fault', 'Critical fault detected. Immediate action required. Recommend emergency shutdown and repair.'
-    elif confidence >= 0.6:
-        if lang == '中文':
-            return '🔴 故障状态', '已检测到明确故障，建议安排检修，避免故障扩大。'
-        else:
-            return '🔴 Fault Detected', 'Fault detected. Recommend scheduling maintenance to prevent escalation.'
-    elif confidence >= 0.4:
-        if lang == '中文':
-            return '⚠️ 预警状态', '检测到轻微异常，建议加强监测，关注参数变化趋势。'
-        else:
-            return '⚠️ Warning', 'Minor anomalies detected. Recommend enhanced monitoring and trend analysis.'
-    else:
-        if lang == '中文':
-            return '✅ 正常运行', '系统运行平稳，电压/电流参数正常，未检测到故障迹象。'
-        else:
-            return '✅ Normal Operation', 'System is operating normally. All voltage/current parameters are within normal ranges.'
 
 
 # ========== 主界面 ==========
